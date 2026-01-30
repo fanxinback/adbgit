@@ -1,0 +1,32 @@
+{
+  "evaluation": {
+    "source": {
+      "name": "mem_used_percent",
+      "display": "mem_used_percent",
+      "aggregation": "AGGREGATION_UNSPECIFIED"
+    },
+    "comparison_operator": "GREATER_THAN_OR_EQUAL",
+    "threshold": {
+      "value": {
+        "double_value": 95.0
+      }
+    },
+    "notification": {
+      "retrigger_seconds": 0,
+      "notify_on_ok": false
+    }
+  },
+  "query_lines": [
+    "select ",
+    "  cluster_id,",
+    "  instance_id,",
+    "  start_time,",
+    "  end_time,",
+    "  mem_used_percent,",
+    "  round(mem_used_percent / 100 * node_types.memory_mb, 0) as mem_used_mb",
+    "from system.compute.node_timeline",
+    "join system.compute.node_types using(node_type)",
+    "where mem_used_percent >= 90",
+    "order by start_time desc;"
+  ]
+}
